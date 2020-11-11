@@ -1,0 +1,10 @@
+.env/
+.git/
+.pytest_cache/
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+coverage.xml
+*.cover
+*.py,cover

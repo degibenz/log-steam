@@ -1,0 +1,40 @@
+version: '3.1'
+
+services:
+  vehicle:
+    image: vehicle:latest
+    restart: always
+    ports:
+      - 8080:8080
+
+  mongo:
+    image: mongo
+    restart: always
+    ports:
+      - 27017:27017
+
+  ws_client:
+    image: log-server:latest
+    command: python3 /app/src/ws_client.py
+    restart: always
+    environment:
+      MONGODB_HOST: 'mongo'
+      MONGODB_PORT: '27017'
+      SERVER_PORT: 9000
+      SERVER_HOST: '0.0.0.0'
+      VEHICLE_SERVER_PORT: '8080'
+      VEHICLE_SERVER_HOST: '192.168.1.69'
+
+  api_service:
+    image: log-server:latest
+    command: ["gunicorn", "main:application", "--config", "/app/config/gunicorn_config.py"]
+    restart: always
+    environment:
+      MONGODB_HOST: 'mongo'
+      MONGODB_PORT: '27017'
+      SERVER_PORT: 9000
+      SERVER_HOST: '0.0.0.0'
+      VEHICLE_SERVER_PORT: '8080'
+      VEHICLE_SERVER_HOST: '192.168.1.69'
+    ports:
+      - 9000:9000
